@@ -1,0 +1,105 @@
+footer {
+	@include flexCol(space-between, center);
+	height: 80vh;
+	margin-top: 10vh;
+	position: absolute;
+	right: 10%;
+	z-index: 2;
+
+	&.lightTheme,
+	&.darkTheme {
+		background: transparent;
+		box-shadow: none;
+	}
+
+	div {
+		@include flexCol(space-between, center);
+	}
+
+	button,
+	a {
+		width: 50px;
+		height: 50px;
+		font-size: 1.4rem;
+		margin: 2.5px 0;
+		color: $white;
+		transition: box-shadow 0.2s, transform 0.2s;
+		display: inline-block;
+		@include flexRow(center, center);
+
+		&.lightTheme {
+			box-shadow: 0 0 10px 2px #ccdce3;
+			background: #2e2e2e;
+		}
+		&.darkTheme {
+			box-shadow: none;
+		}
+	}
+
+	.social.lightTheme {
+		background: $color5;
+	}
+
+	button:active,
+	a:active {
+		box-shadow: none;
+		transform: translateY(2.5px);
+	}
+
+	.toggle {
+		border-radius: 0 20px 0 0;
+		margin: 0;
+		&:hover {
+			cursor: pointer;
+		}
+	}
+
+	.twitter {
+		font-size: 1.5rem;
+	}
+
+	.linkedIn {
+		font-size: 1.7rem;
+	}
+
+	.github {
+		font-size: 1.7rem;
+	}
+
+	.lightTheme.download,
+	.darkTheme.download {
+		border-radius: 0 0 20px 0;
+		margin: 0;
+	}
+
+	button:hover,
+	a:hover {
+		font-size: 1.7rem;
+		i.fa-sun,
+		&.twitter {
+			font-size: 2rem;
+		}
+		& .github {
+			font-size: 2.2rem;
+		}
+		&.linkedIn {
+			font-size: 2rem;
+		}
+	}
+
+	button i,
+	a i {
+		transition: font-size 0.4s;
+
+		&.show {
+			display: inline;
+		}
+		&.hide {
+			display: none;
+		}
+
+		&.fa-sun {
+			font-size: 1.6rem;
+		}
+	}
+}

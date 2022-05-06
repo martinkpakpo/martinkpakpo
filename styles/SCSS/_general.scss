@@ -1,0 +1,101 @@
+html {
+	font-size: 62.5%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin: 0;
+}
+
+ul,
+li {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+button {
+	border: none;
+}
+
+a {
+	display: inline-block;
+	text-decoration: none;
+	color: inherit;
+}
+
+p,
+.aboutMe li {
+	color: #414141;
+}
+
+img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+body {
+	position: relative;
+	font-family: $mainStack;
+}
+
+.lightTheme {
+	background: $white;
+	box-shadow: 0 0 10px 5px #ccdce3;
+	transition: background 0.5s, box-shadow 0.5s;
+}
+
+.darkTheme {
+	background: #212121;
+	box-shadow: none;
+	transition: background 0.5s, box-shadow 0.5s;
+	p,
+	.aboutMe li {
+		color: #aaa;
+	}
+
+	h1 {
+		color: $color1;
+	}
+
+	.aboutMe h3,
+	.aboutMe ul i {
+		color: $color1;
+	}
+
+	section li,
+	h4 {
+		color: #eee;
+	}
+}
+
+body.lightTheme {
+	background: $lightBackground;
+	transition: background 0.5s;
+}
+
+body.darkTheme {
+	background: $darkBackground;
+	transition: background 0.5s;
+}
+
+*[class*="1"] {
+	background: $color1;
+}
+*[class*="2"] {
+	background: $color2;
+}
+*[class*="3"] {
+	background: $color3;
+}
+*[class*="4"] {
+	background: $color4;
+}
+*[class*="5"] {
+	background: $color5;
+}

@@ -1,0 +1,65 @@
+//  // variables
+$color1: #fe5e41;
+$color2: #ff9f1c;
+$color3: #ffbf69;
+$color4: #44f0c2;
+$color5: #6ea9f2;
+$white: #fafafa;
+$black: #2e2e2e;
+$lightBackground: #f7f4f3;
+$darkBackground: #19191b;
+
+// wcag 3 contrast
+;
+
+
+@import url("https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap");
+
+$headingStack: "Abril Fatface", cursive;
+$mainStack: "Roboto", sans-serif;
+
+//mixins
+@mixin flexRow($justify: center, $align: center) {
+	display: flex;
+	flex-direction: row;
+	justify-content: $justify;
+	align-items: $align;
+}
+
+@mixin flexCol($justify: center, $align: center) {
+	display: flex;
+	flex-direction: column;
+	justify-content: $justify;
+	align-items: $align;
+}
+
+//media query mixins
+@mixin maxWidth1140 {
+	@media (max-width: 1140px) {
+		@content;
+	}
+}
+
+@mixin maxWidth1025 {
+	@media (max-width: 1025px) {
+		@content;
+	}
+}
+
+@mixin maxWidth620 {
+	@media (max-width: 620px) {
+		@content;
+	}
+}
+
+@mixin maxWidth520 {
+	@media (max-width: 520px) {
+		@content;
+	}
+}
+
+@mixin maxWidth425 {
+	@media (max-width: 425px) {
+		@content;
+	}
+}

@@ -1,0 +1,37 @@
+section {
+	height: 80vh;
+	margin: 10vh 20px 20vh;
+	box-shadow: 0 0 10px 5px #ccdce3;
+	border-radius: 0;
+	width: calc(79.5% - 40px);
+	scroll-snap-align: start;
+	padding-top: 20px;
+
+	&:first-of-type {
+		margin-top: 10vh;
+	}
+
+	&:last-of-type {
+		margin-bottom: 10vh;
+	}
+
+	h2 {
+		width: 30%;
+		min-width: 170px;
+		padding: 10px 0 10px 20px;
+		color: $white;
+		text-transform: capitalize;
+		font-size: 2.2rem;
+		text-shadow: 1px 1px 1px black;
+
+		i {
+			margin-right: 5px;
+		}
+	}
+
+	p {
+		font-size: 1.6rem;
+		margin: 20px;
+		color: #707070;
+	}
+}

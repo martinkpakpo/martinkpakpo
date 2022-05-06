@@ -1,0 +1,128 @@
+aside {
+	@include flexCol(space-between, stretch);
+	height: 80vh;
+	width: 25%;
+	margin-top: 10vh;
+	margin-left: 10%;
+	padding-top: 20px;
+	border-radius: 20px 0 0 20px;
+	text-align: center;
+
+	.imgContainer {
+		width: 70%;
+		margin: 0 auto;
+	}
+
+	img {
+		border-radius: 50%;
+		max-width: 225px;
+		max-height: 100%;
+		margin: 0 auto;
+	}
+
+	span {
+		display: inline-block;
+		width: 100%;
+		font-size: 2.5rem;
+		text-transform: capitalize;
+		margin: 5px;
+	}
+	.hamburgerMenu {
+		display: none;
+	}
+}
+
+nav {
+	@include flexCol(center, stretch);
+	border-radius: 0 0 0 20px;
+	// overflow: hidden;
+	position: relative;
+	text-align: left;
+	flex-shrink: 0;
+
+	.mobileMenu {
+		display: none;
+	}
+
+	a {
+		font-size: 2rem;
+		padding: 2.5px;
+		position: relative;
+		z-index: 2;
+		width: 100%;
+	}
+
+	.fas {
+		margin-left: calc(5% - 10px);
+		margin-right: 10%;
+		color: $white;
+	}
+
+	li {
+		position: relative;
+		transition: color 0.3s, text-shadow 0.3s;
+
+		&:last-of-type {
+			border-radius: 0 0 0 20px;
+		}
+
+		span {
+			display: inline-block;
+			width: 20%;
+			padding: 0 5%;
+		}
+
+		&:not(.activeNav):hover {
+			text-shadow: 1px 1px 1px black;
+			&.nav1 {
+				color: $color1;
+			}
+			&.nav2 {
+				color: $color2;
+			}
+			&.nav3 {
+				color: $color3;
+			}
+			&.nav4 {
+				color: $color4;
+			}
+			&.nav5 {
+				color: $color5;
+			}
+		}
+
+		&:after {
+			content: " ";
+			position: absolute;
+			width: calc(90% - 25px);
+			height: 100%;
+			top: 0;
+			right: 0;
+			transition: width 0.4s, background 0.5s, border 0.5s;
+		}
+		&.lightThemeAfter:after {
+			background: $white;
+			border-bottom: 0.5px solid #f2f1f1;
+			border-top: 0.5px solid #f2f1f1;
+		}
+
+		&.darkThemeAfter {
+			color: $white;
+		}
+
+		&.darkThemeAfter:after {
+			background: #212121;
+			border-bottom: 0.5px solid #212121;
+			border-top: 0.5px solid #212121;
+		}
+
+		&.activeNav:after {
+			width: 0%;
+		}
+
+		&.activeNav {
+			color: $white;
+			text-shadow: 1px 1px 1px black;
+		}
+	}
+}
