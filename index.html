@@ -91,19 +91,6 @@
 	</script>
 	<script src="js/chatbox.js"></script>
 <script>
-		var today = new Date();
-	    var dtn="6/1/1999";
-	    var an=dtn.substr(6,4); // l'année (les quatre premiers caractères de la chaîne à partir de 6)
-	    var mois=dtn.substr(3,2);// On selectionne le mois de la date de naissance
-	    var day= dtn.substr(0,2); // On selectionne la jour de la date de naissance
-
-	    var dateNaissance = new Date(an + "-" + mois + "-" + day);
-	    var age = today.getFullYear() - dateNaissance.getFullYear();
-	    var m = today.getMonth() - dateNaissance.getMonth();
-	    if (m < 0 || (m === 0 && today.getDate() < dateNaissance.getDate())) {
-		age = age - 1;
-	    }
-	    document.getElementById('age').value = age; // que l'on place dans le input d'id Age
 	
 	 function postEmail() {
 		console.log("function called");
@@ -306,9 +293,8 @@
 							<div class="col col-d-6 col-t-6 col-m-12 border-line-v">
 								<div class="info-list">
 									<ul>
-										<li><strong>Age . . . . .</strong> <label id="age"></label></li>
 										<li><strong>Pays . . . . .</strong> France</li>
-										<li><strong>Adresse . . . . .</strong> Nantes, France</li>
+										<li><strong>Ville . . . . .</strong> Nantes</li>
 									</ul>
 								</div>
 							</div>
