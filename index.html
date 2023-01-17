@@ -755,8 +755,7 @@
 	var date = new Date(1999, 6, 1);
         var diff = Date.now() - date.getTime();
         var age = new Date(diff); 
-        return Math.abs(age.getUTCFullYear() - 1970);
-        document.getElementById("age").innerHTML=age;  
+        document.getElementById("age").innerHTML=Math.abs(age.getUTCFullYear() - 1970);;  
     </script> 
 
 </body>
