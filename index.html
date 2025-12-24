@@ -16,7 +16,8 @@
             font-family: 'Inter', sans-serif;
             background-color: #f3f4f6;
             color: #1f2937;
-            overflow: hidden; /* Empêche le défilement global de la page */
+            /* Empêche le scroll global pour l'effet App */
+            overflow: hidden; 
         }
         
         /* Animation d'apparition des sections */
@@ -24,11 +25,19 @@
             display: none;
             opacity: 0;
             transform: translateY(10px);
-            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
-            height: 100vh;
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+            height: 100%;
             overflow-y: auto; /* Le scroll se fait uniquement dans la zone de contenu */
-            padding: 3rem;
+            /* Padding ajusté pour mobile (plus petit) et desktop (plus grand) */
+            padding: 1.5rem; 
             padding-bottom: 6rem;
+        }
+        
+        @media (min-width: 768px) {
+            .content-section {
+                padding: 3rem;
+                padding-bottom: 3rem;
+            }
         }
         
         .content-section.active {
@@ -37,20 +46,32 @@
             transform: translateY(0);
         }
 
-        /* Style du menu actif */
-        .nav-item {
+        /* Style du menu actif - DESKTOP (Vertical) */
+        .desktop-nav .nav-item {
             transition: all 0.2s;
             border-left: 4px solid transparent;
         }
-        .nav-item.active {
+        .desktop-nav .nav-item.active {
             background-color: #f3f4f6;
             color: #2563eb;
             border-left: 4px solid #2563eb;
             font-weight: 600;
         }
-        .nav-item:hover:not(.active) {
+        .desktop-nav .nav-item:hover:not(.active) {
             background-color: #f9fafb;
             color: #111827;
+        }
+
+        /* Style du menu actif - MOBILE (Horizontal) */
+        .mobile-nav .nav-item {
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .mobile-nav .nav-item.active {
+            background-color: #eff6ff; /* blue-50 */
+            color: #2563eb;
+            border-color: #bfdbfe; /* blue-200 */
+            font-weight: 600;
         }
 
         /* Modal Styles */
@@ -66,6 +87,7 @@
         /* Scrollbar personnalisée fine */
         ::-webkit-scrollbar {
             width: 6px;
+            height: 6px; /* Pour le scroll horizontal */
         }
         ::-webkit-scrollbar-track {
             background: #f1f1f1; 
@@ -77,36 +99,40 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8; 
         }
+        
+        /* Cacher la scrollbar sur le menu mobile pour le style "App" */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
 </head>
-<body class="flex h-screen w-screen relative">
+<!-- LAYOUT HYBRIDE : Flex Column sur mobile, Flex Row sur Desktop -->
+<body class="flex flex-col md:flex-row h-screen w-screen relative">
 
     <!-- MODAL DE BIENVENUE / CHOIX DE LANGUE -->
     <div id="welcome-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-gray-900/90 backdrop-blur-sm p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden transform scale-100 transition-transform">
-            <!-- Header Modal -->
             <div class="bg-gradient-to-r from-blue-600 to-indigo-700 p-8 text-center">
-                <!-- PHOTO DANS LE MESSAGE D'ACCUEIL -->
                 <div class="inline-block p-1 rounded-full bg-white/20 mb-4 backdrop-blur-md shadow-lg">
-                    <img src="photo_profil.jpg" alt="Martin Kpakpo" class="h-24 w-24 rounded-full border-4 border-white object-cover">
+                    <img src="photo_profil.jpg" sizes="150" alt="Martin Kpakpo" class="h-24 w-24 rounded-full border-4 border-white object-cover">
                 </div>
                 <h2 class="text-3xl font-bold text-white mb-2">Bienvenue ! / Welcome!</h2>
                 <p class="text-blue-100 text-sm font-medium">Martin Kpakpo | Portfolio</p>
             </div>
-            
-            <!-- Content Modal -->
             <div class="p-8 text-center">
                 <p class="text-gray-600 mb-8 text-lg">
-                    Veuillez choisir votre langue pour visiter le site.<br>
-                    <span class="text-sm text-gray-400">Please select your language to visit the site.</span>
+                    Veuillez choisir votre langue.<br>
+                    <span class="text-sm text-gray-400">Please select your language.</span>
                 </p>
-                
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
                     <button onclick="setLanguage('fr', true)" class="group relative px-6 py-3 bg-white border-2 border-gray-100 hover:border-blue-500 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 w-full sm:w-auto flex items-center justify-center gap-3">
                         <span class="fi fi-fr text-2xl rounded shadow-sm"></span>
                         <span class="font-bold text-gray-700 group-hover:text-blue-600">Français</span>
                     </button>
-                    
                     <button onclick="setLanguage('en', true)" class="group relative px-6 py-3 bg-white border-2 border-gray-100 hover:border-blue-500 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 w-full sm:w-auto flex items-center justify-center gap-3">
                         <span class="fi fi-gb text-2xl rounded shadow-sm"></span>
                         <span class="font-bold text-gray-700 group-hover:text-blue-600">English</span>
@@ -116,57 +142,92 @@
         </div>
     </div>
 
-    <!-- 1. BARRE DE NAVIGATION VERTICALE (GAUCHE) -->
-    <nav class="w-72 bg-white border-r border-gray-200 flex flex-col flex-shrink-0 z-20 h-full shadow-lg">
+    <!-- ========================================== -->
+    <!-- NAVIGATION RESPONSIVE (Unique Component)   -->
+    <!-- ========================================== -->
+    
+    <nav class="bg-white border-b md:border-b-0 md:border-r border-gray-200 flex flex-col flex-shrink-0 z-20 shadow-lg md:w-72 md:h-full transition-all duration-300">
         
-        <!-- Profil -->
-        <div class="p-8 text-center border-b border-gray-100 bg-white">
-            <div class="mb-4 inline-block p-1 rounded-full bg-gradient-to-tr from-gray-100 to-gray-300 shadow-sm">
-                <img src="photo_profil.jpg" alt="Martin Kpakpo" class="h-24 w-24 rounded-full border-4 border-white object-cover">
+        <!-- HEADER NAV : Profil & Langue -->
+        <div class="p-4 md:p-8 flex md:flex-col items-center justify-between md:justify-center border-b border-gray-100 bg-white">
+            
+            <!-- Profil (Compact sur mobile, Large sur desktop) -->
+            <div class="flex items-center md:flex-col md:text-center gap-3 md:gap-0">
+                <div class="inline-block p-0.5 md:p-1 rounded-full bg-gradient-to-tr from-gray-100 to-gray-300 shadow-sm">
+                    <img src="photo_profil.jpg" sizes="150" alt="Martin Kpakpo" class="h-10 w-10 md:h-24 md:w-24 rounded-full border-2 md:border-4 border-white object-cover">
+                </div>
+                <div class="md:mt-4">
+                    <h2 class="text-sm md:text-xl font-bold text-gray-900 leading-tight">Martin Kpakpo</h2>
+                    <p class="hidden md:block text-xs text-blue-600 font-semibold uppercase tracking-wider mt-2" data-i18n="role">Consultant AMOA &<br>Chef de Projet SI</p>
+                    <p class="md:hidden text-xs text-blue-600 font-medium">Portfolio</p>
+                </div>
             </div>
-            <h2 class="text-xl font-bold text-gray-900">Martin Kpakpo</h2>
-            <p class="text-xs text-blue-600 font-semibold uppercase tracking-wider mt-2" data-i18n="role">Consultant AMOA &<br>Chef de Projet SI</p>
+
+            <!-- Mobile Actions (Langue + Contact Rapide) -->
+            <div class="flex items-center gap-2 md:hidden">
+                <!-- Selecteur Langue Mobile -->
+                <button onclick="toggleLang()" class="p-2 rounded-full bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200">
+                    <span id="mobile-lang-flag" class="fi fi-fr rounded-sm"></span>
+                </button>
+                <!-- Mail -->
+                <a href="mailto:martinkpakpo22@gmail.com" class="p-2 rounded-full bg-blue-600 text-white shadow-sm hover:bg-blue-700">
+                    <i class="fas fa-envelope"></i>
+                </a>
+            </div>
         </div>
 
-        <!-- Menu -->
-        <div class="flex-1 overflow-y-auto py-6 px-0">
-            <ul class="space-y-1">
+        <!-- MENU LINKS (Scroll Horizontal Mobile / Liste Verticale Desktop) -->
+        <!-- La classe `flex-1` prend tout l'espace sur desktop, mais juste le nécessaire sur mobile -->
+        <div class="md:flex-1 md:overflow-y-auto bg-gray-50 md:bg-white md:py-6 overflow-x-auto hide-scrollbar">
+            
+            <!-- Liste Mobile (Horizontale) -->
+            <ul class="flex md:hidden px-4 py-3 gap-3 mobile-nav items-center">
+                <li><button onclick="showSection('about')" id="mob-btn-about" class="nav-item active px-4 py-2 rounded-full bg-white border border-gray-200 text-sm text-gray-600 shadow-sm">À propos</button></li>
+                <li><button onclick="showSection('experience')" id="mob-btn-experience" class="nav-item px-4 py-2 rounded-full bg-white border border-gray-200 text-sm text-gray-600 shadow-sm">Expériences</button></li>
+                <li><button onclick="showSection('competences')" id="mob-btn-competences" class="nav-item px-4 py-2 rounded-full bg-white border border-gray-200 text-sm text-gray-600 shadow-sm">Compétences</button></li>
+                <li><button onclick="showSection('certifications')" id="mob-btn-certifications" class="nav-item px-4 py-2 rounded-full bg-white border border-gray-200 text-sm text-gray-600 shadow-sm">Certifs</button></li>
+                <li><button onclick="showSection('formation')" id="mob-btn-formation" class="nav-item px-4 py-2 rounded-full bg-white border border-gray-200 text-sm text-gray-600 shadow-sm">Formation</button></li>
+                <li><button onclick="showSection('langues')" id="mob-btn-langues" class="nav-item px-4 py-2 rounded-full bg-white border border-gray-200 text-sm text-gray-600 shadow-sm">Langues</button></li>
+            </ul>
+
+            <!-- Liste Desktop (Verticale) -->
+            <ul class="hidden md:block space-y-1 desktop-nav px-0">
                 <li>
-                    <button onclick="showSection('about')" id="btn-about" class="nav-item active w-full text-left px-8 py-3 text-sm text-gray-600 flex items-center gap-3">
+                    <button onclick="showSection('about')" id="desk-btn-about" class="nav-item active w-full text-left px-8 py-3 text-sm text-gray-600 flex items-center gap-3">
                         <i class="fas fa-user w-5 text-center"></i> <span data-i18n="menu_about">À propos de moi</span>
                     </button>
                 </li>
                 <li>
-                    <button onclick="showSection('experience')" id="btn-experience" class="nav-item w-full text-left px-8 py-3 text-sm text-gray-600 flex items-center gap-3">
+                    <button onclick="showSection('experience')" id="desk-btn-experience" class="nav-item w-full text-left px-8 py-3 text-sm text-gray-600 flex items-center gap-3">
                         <i class="fas fa-briefcase w-5 text-center"></i> <span data-i18n="menu_exp">Expériences Clés</span>
                     </button>
                 </li>
                 <li>
-                    <button onclick="showSection('competences')" id="btn-competences" class="nav-item w-full text-left px-8 py-3 text-sm text-gray-600 flex items-center gap-3">
+                    <button onclick="showSection('competences')" id="desk-btn-competences" class="nav-item w-full text-left px-8 py-3 text-sm text-gray-600 flex items-center gap-3">
                         <i class="fas fa-cubes w-5 text-center"></i> <span data-i18n="menu_skills">Compétences</span>
                     </button>
                 </li>
                 <li>
-                    <button onclick="showSection('certifications')" id="btn-certifications" class="nav-item w-full text-left px-8 py-3 text-sm text-gray-600 flex items-center gap-3">
+                    <button onclick="showSection('certifications')" id="desk-btn-certifications" class="nav-item w-full text-left px-8 py-3 text-sm text-gray-600 flex items-center gap-3">
                         <i class="fas fa-certificate w-5 text-center"></i> <span data-i18n="menu_certs">Certifications</span>
                     </button>
                 </li>
                 <li>
-                    <button onclick="showSection('formation')" id="btn-formation" class="nav-item w-full text-left px-8 py-3 text-sm text-gray-600 flex items-center gap-3">
+                    <button onclick="showSection('formation')" id="desk-btn-formation" class="nav-item w-full text-left px-8 py-3 text-sm text-gray-600 flex items-center gap-3">
                         <i class="fas fa-graduation-cap w-5 text-center"></i> <span data-i18n="menu_edu">Formation</span>
                     </button>
                 </li>
                 <li>
-                    <button onclick="showSection('langues')" id="btn-langues" class="nav-item w-full text-left px-8 py-3 text-sm text-gray-600 flex items-center gap-3">
+                    <button onclick="showSection('langues')" id="desk-btn-langues" class="nav-item w-full text-left px-8 py-3 text-sm text-gray-600 flex items-center gap-3">
                         <i class="fas fa-language w-5 text-center"></i> <span data-i18n="menu_lang">Langues</span>
                     </button>
                 </li>
             </ul>
         </div>
 
-        <!-- Pied de menu : Selecteur Langue + Contact -->
-        <div class="p-6 border-t border-gray-100 bg-gray-50">
-            <!-- Language Switcher (Dropdown avec Icones) -->
+        <!-- FOOTER NAV (Desktop Uniquement) -->
+        <div class="hidden md:block p-6 border-t border-gray-100 bg-gray-50">
+            <!-- Language Switcher Desktop -->
             <div class="mb-4 relative">
                 <div class="flex items-center justify-center gap-2 bg-white border border-gray-200 rounded-lg p-1.5 shadow-sm">
                     <button onclick="setLanguage('fr')" id="lang-btn-fr" class="flex-1 py-1 px-2 rounded-md text-xs font-bold transition-colors flex items-center justify-center gap-1.5 bg-gray-100 text-blue-700">
@@ -188,12 +249,12 @@
         </div>
     </nav>
 
-    <!-- 2. ZONE DE CONTENU (DROITE) -->
-    <main class="flex-1 h-full relative bg-gray-50 w-full">
-
+    <!-- ZONE DE CONTENU PRINCIPALE -->
+    <main class="flex-1 h-full relative bg-gray-50 w-full overflow-hidden">
+        
         <!-- BLOC 1: À PROPOS -->
         <div id="about" class="content-section active">
-            <div class="max-w-4xl mx-auto flex flex-col justify-center min-h-[80vh]">
+            <div class="max-w-4xl mx-auto flex flex-col justify-center min-h-[70vh]">
                 
                 <div class="flex flex-wrap gap-3 mb-6">
                     <span class="inline-block px-3 py-1 text-xs font-semibold tracking-wider text-blue-600 uppercase bg-blue-100 rounded-full w-fit" data-i18n="welcome_badge">Bienvenue</span>
@@ -202,11 +263,11 @@
                     </span>
                 </div>
 
-                <h1 class="text-5xl font-bold text-gray-900 mb-8 leading-tight" data-i18n="hero_title">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-8 leading-tight" data-i18n="hero_title">
                     Je transforme vos projets SI en <span class="text-blue-600">succès opérationnels</span>.
                 </h1>
                 
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mb-8">
+                <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 mb-8">
                     <p class="text-lg text-gray-600 leading-relaxed mb-6" data-i18n="hero_desc_1">
                         Consultant avec <strong id="dynamic-exp-text" class="text-gray-900">3 années d'expérience</strong>, diplômé d'un Mastère Spécialisé en Management des SI.
                     </p>
@@ -246,9 +307,9 @@
                             <i class="fas fa-building text-white text-xs"></i>
                         </div>
                         <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                            <div class="flex justify-between items-start mb-2">
+                            <div class="flex flex-col sm:flex-row justify-between items-start mb-2 gap-2">
                                 <h3 class="font-bold text-gray-900" data-i18n="exp1_role">Consultant en informatique</h3>
-                                <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded" data-i18n="exp1_date">Nov. 2025 – Auj.</span>
+                                <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded whitespace-nowrap" data-i18n="exp1_date">Nov. 2025 – Auj.</span>
                             </div>
                             <div class="text-sm text-gray-500 font-medium mb-3" data-i18n="exp1_company">Grand Acteur Public (Paris)</div>
                             <p class="text-sm text-gray-600 mb-4 italic" data-i18n="exp1_desc">Projet de mise en conformité réglementaire (TVA).</p>
@@ -267,9 +328,9 @@
                             <i class="fas fa-industry text-gray-400 text-xs"></i>
                         </div>
                         <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                            <div class="flex justify-between items-start mb-2">
+                            <div class="flex flex-col sm:flex-row justify-between items-start mb-2 gap-2">
                                 <h3 class="font-bold text-gray-900" data-i18n="exp2_role">Transformation Digitale</h3>
-                                <span class="text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded">2024 – 2025</span>
+                                <span class="text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded whitespace-nowrap">2024 – 2025</span>
                             </div>
                             <div class="text-sm text-gray-500 font-medium mb-3" data-i18n="exp2_company">Industrie Pharma (Lyon)</div>
                             <p class="text-sm text-gray-600 mb-4 italic" data-i18n="exp2_desc">Digitalisation processus industriels & logistiques.</p>
@@ -287,9 +348,9 @@
                             <i class="fas fa-code text-gray-400 text-xs"></i>
                         </div>
                         <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                            <div class="flex justify-between items-start mb-2">
+                            <div class="flex flex-col sm:flex-row justify-between items-start mb-2 gap-2">
                                 <h3 class="font-bold text-gray-900" data-i18n="exp3_role">Consultant Technique</h3>
-                                <span class="text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded">2022 – 2024</span>
+                                <span class="text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded whitespace-nowrap">2022 – 2024</span>
                             </div>
                             <div class="text-sm text-gray-500 font-medium mb-3" data-i18n="exp3_company">ESN / Public (Nantes)</div>
                             <p class="text-sm text-gray-600 mb-4 italic" data-i18n="exp3_desc">Maintenance SI critique (Aides PAC).</p>
@@ -589,69 +650,68 @@
 
         let currentLang = 'fr';
 
-        // Changer la langue
         function setLanguage(lang, closeModal = false) {
             currentLang = lang;
-            
-            // Masquer le modal si demandé
             if (closeModal) {
                 document.getElementById('welcome-modal').classList.add('hidden-modal');
             }
-
-            // Mettre à jour tous les textes
             document.querySelectorAll('[data-i18n]').forEach(element => {
                 const key = element.getAttribute('data-i18n');
                 if (translations[lang][key]) {
                     element.innerHTML = translations[lang][key];
                 }
             });
-
-            // Mettre à jour l'état visuel du switcher
+            // Update mobile flag
+            document.getElementById('mobile-lang-flag').className = lang === 'fr' ? 'fi fi-fr rounded-sm' : 'fi fi-gb rounded-sm';
+            
+            // Update desktop switcher
             document.getElementById('lang-btn-fr').className = lang === 'fr' 
                 ? "flex-1 py-1 px-2 rounded-md text-xs font-bold transition-colors flex items-center justify-center gap-1.5 bg-gray-100 text-blue-700" 
                 : "flex-1 py-1 px-2 rounded-md text-xs font-bold text-gray-500 hover:bg-gray-50 transition-colors flex items-center justify-center gap-1.5";
-            
             document.getElementById('lang-btn-en').className = lang === 'en' 
                 ? "flex-1 py-1 px-2 rounded-md text-xs font-bold transition-colors flex items-center justify-center gap-1.5 bg-gray-100 text-blue-700" 
                 : "flex-1 py-1 px-2 rounded-md text-xs font-bold text-gray-500 hover:bg-gray-50 transition-colors flex items-center justify-center gap-1.5";
 
-            // Recalculer l'année avec le bon texte
             updateExperience();
         }
 
-        // Navigation SPA
-        function showSection(sectionId) {
-            document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-
-            const targetSection = document.getElementById(sectionId);
-            const targetBtn = document.getElementById('btn-' + sectionId);
-            
-            if (targetSection) targetSection.classList.add('active');
-            if (targetBtn) targetBtn.classList.add('active');
+        // Fonction Toggle Langue Mobile (Cycle FR/EN)
+        function toggleLang() {
+            setLanguage(currentLang === 'fr' ? 'en' : 'fr');
         }
 
-        // Calcul dynamique des années d'expérience (Depuis Sept 2022)
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
+            // Remove active from desktop buttons
+            document.querySelectorAll('.desktop-nav .nav-item').forEach(el => el.classList.remove('active'));
+            // Remove active from mobile buttons
+            document.querySelectorAll('.mobile-nav .nav-item').forEach(el => el.classList.remove('active'));
+
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Activate button if exists
+            const deskBtn = document.getElementById('desk-btn-' + sectionId);
+            if(deskBtn) deskBtn.classList.add('active');
+            
+            const mobBtn = document.getElementById('mob-btn-' + sectionId);
+            if(mobBtn) mobBtn.classList.add('active');
+        }
+
         function updateExperience() {
             const startYear = 2022;
-            const startMonth = 8; // Septembre
+            const startMonth = 8; 
             const now = new Date();
-            
             let years = now.getFullYear() - startYear;
             if (now.getMonth() < startMonth) {
                 years--;
             }
-
             const expText = document.getElementById('dynamic-exp-text');
             const expBadge = document.getElementById('dynamic-exp-badge');
-            
             if (expText) expText.innerHTML = `${years} ${translations[currentLang].year_text}`;
             if (expBadge) expBadge.innerText = `${years} ${translations[currentLang].year_unit}`;
         }
 
-        // Init
         document.addEventListener('DOMContentLoaded', () => {
-            // Lancer le calcul par défaut (en FR, modal visible)
             updateExperience();
         });
     </script>
