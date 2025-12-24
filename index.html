@@ -3,264 +3,658 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CV Martin Kpakpo - Consultant AMOA / Chef de Projet</title>
+    <title>Martin Kpakpo | Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome pour les icônes générales -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Flag Icons pour les drapeaux (format icône CSS) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@6.6.6/css/flag-icons.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         body {
-            font-family: 'Lato', sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: #f3f4f6;
-            color: #334155;
-            font-size: 13.5px;
-            line-height: 1.4;
-        }
-        h1, h2, h3, .serif-font {
-            font-family: 'Merriweather', serif;
+            color: #1f2937;
+            overflow: hidden; /* Empêche le défilement global de la page */
         }
         
-        @media print {
-            @page { margin: 0; size: A4; }
-            body { background-color: white; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            .page-container { width: 100% !important; box-shadow: none !important; margin: 0 !important; min-height: 100vh; }
-            .no-print { display: none; }
-        }
-
-        .page-container {
-            width: 210mm;
-            min-height: 297mm;
-            margin: 20px auto;
-            background: white;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        /* --- Palette Générique (Bleu Roi / Gris) --- */
-        .header-section {
-            background-color: #1e293b; /* Gris-Bleu foncé (Slate 800) */
-            color: white;
-            padding: 25px 35px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .section-title {
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: #2563eb; /* Bleu Roi standard */
-            border-bottom: 2px solid #2563eb;
-            padding-bottom: 3px;
-            margin-bottom: 12px;
-            margin-top: 5px;
+        /* Animation d'apparition des sections */
+        .content-section {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+            height: 100vh;
+            overflow-y: auto; /* Le scroll se fait uniquement dans la zone de contenu */
+            padding: 3rem;
+            padding-bottom: 6rem;
         }
         
-        .sidebar-title {
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-size: 0.85rem;
-            font-weight: 700;
+        .content-section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Style du menu actif */
+        .nav-item {
+            transition: all 0.2s;
+            border-left: 4px solid transparent;
+        }
+        .nav-item.active {
+            background-color: #f3f4f6;
             color: #2563eb;
-            border-bottom: 1px solid #cbd5e1;
-            padding-bottom: 3px;
-            margin-bottom: 10px;
-            margin-top: 20px;
+            border-left: 4px solid #2563eb;
+            font-weight: 600;
+        }
+        .nav-item:hover:not(.active) {
+            background-color: #f9fafb;
+            color: #111827;
         }
 
-        .job-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 2px;
+        /* Modal Styles */
+        #welcome-modal {
+            transition: opacity 0.5s ease-in-out, visibility 0.5s;
         }
-        
-        .badge-pro {
-            background-color: #2563eb;
-            color: white;
+        #welcome-modal.hidden-modal {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* Scrollbar personnalisée fine */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
         }
     </style>
 </head>
-<body>
+<body class="flex h-screen w-screen relative">
 
-    <div class="no-print text-center p-2 bg-blue-600 text-white mb-4 font-bold text-sm shadow-lg">
-        <p><i class="fas fa-file-alt mr-2"></i>Version <strong>Générique & Polyvalente</strong> (AMOA / Chef de Projet)</p>
-    </div>
-
-    <div class="page-container">
-        
-        <!-- HEADER -->
-        <div class="header-section">
-            <div>
-                <h1 class="text-3xl font-bold mb-1 tracking-tight heading-font">Martin KPAKPO</h1>
-                <p class="text-sm font-medium tracking-wide text-blue-100 uppercase">Consultant AMOA | Chef de Projet SI</p>
+    <!-- MODAL DE BIENVENUE / CHOIX DE LANGUE -->
+    <div id="welcome-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-gray-900/90 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden transform scale-100 transition-transform">
+            <!-- Header Modal -->
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-700 p-8 text-center">
+                <!-- PHOTO DANS LE MESSAGE D'ACCUEIL -->
+                <div class="inline-block p-1 rounded-full bg-white/20 mb-4 backdrop-blur-md shadow-lg">
+                    <img src="photo_profil.jpg" alt="Martin Kpakpo" class="h-24 w-24 rounded-full border-4 border-white object-cover">
+                </div>
+                <h2 class="text-3xl font-bold text-white mb-2">Bienvenue ! / Welcome!</h2>
+                <p class="text-blue-100 text-sm font-medium">Martin Kpakpo | Portfolio</p>
             </div>
-            <div class="text-right text-xs text-white space-y-0.5 font-medium">
-                <p><i class="fas fa-envelope mr-2"></i>martinkpakpo22@gmail.com</p>
-                <p><i class="fas fa-phone mr-2"></i>06 05 96 00 86</p>
-                <p><i class="fas fa-map-marker-alt mr-2"></i>Paris</p>
-                <p><i class="fab fa-linkedin mr-2"></i>linkedin.com/in/martin-kpakpo</p>
+            
+            <!-- Content Modal -->
+            <div class="p-8 text-center">
+                <p class="text-gray-600 mb-8 text-lg">
+                    Veuillez choisir votre langue pour visiter le site.<br>
+                    <span class="text-sm text-gray-400">Please select your language to visit the site.</span>
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button onclick="setLanguage('fr', true)" class="group relative px-6 py-3 bg-white border-2 border-gray-100 hover:border-blue-500 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 w-full sm:w-auto flex items-center justify-center gap-3">
+                        <span class="fi fi-fr text-2xl rounded shadow-sm"></span>
+                        <span class="font-bold text-gray-700 group-hover:text-blue-600">Français</span>
+                    </button>
+                    
+                    <button onclick="setLanguage('en', true)" class="group relative px-6 py-3 bg-white border-2 border-gray-100 hover:border-blue-500 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 w-full sm:w-auto flex items-center justify-center gap-3">
+                        <span class="fi fi-gb text-2xl rounded shadow-sm"></span>
+                        <span class="font-bold text-gray-700 group-hover:text-blue-600">English</span>
+                    </button>
+                </div>
             </div>
         </div>
+    </div>
 
-        <!-- CONTENU -->
-        <div class="flex flex-1">
-            
-            <!-- COLONNE PRINCIPALE (EXPERIENCE) - 66% -->
-            <div class="w-[66%] p-8 pr-6 border-r border-slate-200">
+    <!-- 1. BARRE DE NAVIGATION VERTICALE (GAUCHE) -->
+    <nav class="w-72 bg-white border-r border-gray-200 flex flex-col flex-shrink-0 z-20 h-full shadow-lg">
+        
+        <!-- Profil -->
+        <div class="p-8 text-center border-b border-gray-100 bg-white">
+            <div class="mb-4 inline-block p-1 rounded-full bg-gradient-to-tr from-gray-100 to-gray-300 shadow-sm">
+                <img src="photo_profil.jpg" alt="Martin Kpakpo" class="h-24 w-24 rounded-full border-4 border-white object-cover">
+            </div>
+            <h2 class="text-xl font-bold text-gray-900">Martin Kpakpo</h2>
+            <p class="text-xs text-blue-600 font-semibold uppercase tracking-wider mt-2" data-i18n="role">Consultant AMOA &<br>Chef de Projet SI</p>
+        </div>
+
+        <!-- Menu -->
+        <div class="flex-1 overflow-y-auto py-6 px-0">
+            <ul class="space-y-1">
+                <li>
+                    <button onclick="showSection('about')" id="btn-about" class="nav-item active w-full text-left px-8 py-3 text-sm text-gray-600 flex items-center gap-3">
+                        <i class="fas fa-user w-5 text-center"></i> <span data-i18n="menu_about">À propos de moi</span>
+                    </button>
+                </li>
+                <li>
+                    <button onclick="showSection('experience')" id="btn-experience" class="nav-item w-full text-left px-8 py-3 text-sm text-gray-600 flex items-center gap-3">
+                        <i class="fas fa-briefcase w-5 text-center"></i> <span data-i18n="menu_exp">Expériences Clés</span>
+                    </button>
+                </li>
+                <li>
+                    <button onclick="showSection('competences')" id="btn-competences" class="nav-item w-full text-left px-8 py-3 text-sm text-gray-600 flex items-center gap-3">
+                        <i class="fas fa-cubes w-5 text-center"></i> <span data-i18n="menu_skills">Compétences</span>
+                    </button>
+                </li>
+                <li>
+                    <button onclick="showSection('certifications')" id="btn-certifications" class="nav-item w-full text-left px-8 py-3 text-sm text-gray-600 flex items-center gap-3">
+                        <i class="fas fa-certificate w-5 text-center"></i> <span data-i18n="menu_certs">Certifications</span>
+                    </button>
+                </li>
+                <li>
+                    <button onclick="showSection('formation')" id="btn-formation" class="nav-item w-full text-left px-8 py-3 text-sm text-gray-600 flex items-center gap-3">
+                        <i class="fas fa-graduation-cap w-5 text-center"></i> <span data-i18n="menu_edu">Formation</span>
+                    </button>
+                </li>
+                <li>
+                    <button onclick="showSection('langues')" id="btn-langues" class="nav-item w-full text-left px-8 py-3 text-sm text-gray-600 flex items-center gap-3">
+                        <i class="fas fa-language w-5 text-center"></i> <span data-i18n="menu_lang">Langues</span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Pied de menu : Selecteur Langue + Contact -->
+        <div class="p-6 border-t border-gray-100 bg-gray-50">
+            <!-- Language Switcher (Dropdown avec Icones) -->
+            <div class="mb-4 relative">
+                <div class="flex items-center justify-center gap-2 bg-white border border-gray-200 rounded-lg p-1.5 shadow-sm">
+                    <button onclick="setLanguage('fr')" id="lang-btn-fr" class="flex-1 py-1 px-2 rounded-md text-xs font-bold transition-colors flex items-center justify-center gap-1.5 bg-gray-100 text-blue-700">
+                        <span class="fi fi-fr rounded-sm"></span> FR
+                    </button>
+                    <button onclick="setLanguage('en')" id="lang-btn-en" class="flex-1 py-1 px-2 rounded-md text-xs font-bold text-gray-500 hover:bg-gray-50 transition-colors flex items-center justify-center gap-1.5">
+                        <span class="fi fi-gb rounded-sm"></span> EN
+                    </button>
+                </div>
+            </div>
+
+            <a href="mailto:martinkpakpo22@gmail.com" class="block w-full bg-gray-900 text-white text-center py-2.5 rounded-lg text-sm font-medium hover:bg-gray-800 transition shadow-md mb-4" data-i18n="contact_btn">
+                Me contacter
+            </a>
+            <div class="flex justify-center gap-6 text-gray-400">
+                <a href="https://www.linkedin.com/in/martin-kpakpo/" target="_blank" class="hover:text-blue-600 transition"><i class="fab fa-linkedin text-xl"></i></a>
+                <a href="#" class="hover:text-gray-600 transition"><i class="fas fa-envelope text-xl"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 2. ZONE DE CONTENU (DROITE) -->
+    <main class="flex-1 h-full relative bg-gray-50 w-full">
+
+        <!-- BLOC 1: À PROPOS -->
+        <div id="about" class="content-section active">
+            <div class="max-w-4xl mx-auto flex flex-col justify-center min-h-[80vh]">
                 
-                <!-- Résumé -->
-                <div class="mb-6">
-                    <p class="text-sm text-slate-600 leading-relaxed text-justify italic border-l-4 border-blue-600 pl-3 py-1 bg-slate-50 rounded-r">
-                        "Consultant avec 3 ans d'expérience, diplômé d'un Mastère Spécialisé en Management des SI. Je dispose d'une double expertise technique et fonctionnelle, consolidée au sein de grands comptes (Sanofi, DGFIP). Certifié PSM I et PSPO I, j'excelle dans le pilotage de projet, la stratégie de qualification et l'interface entre les métiers et la technique."
+                <div class="flex flex-wrap gap-3 mb-6">
+                    <span class="inline-block px-3 py-1 text-xs font-semibold tracking-wider text-blue-600 uppercase bg-blue-100 rounded-full w-fit" data-i18n="welcome_badge">Bienvenue</span>
+                    <span class="inline-block px-3 py-1 text-xs font-semibold tracking-wider text-gray-600 uppercase bg-gray-200 rounded-full w-fit flex items-center gap-2">
+                        <i class="fas fa-map-marker-alt"></i> <span data-i18n="location">Paris, France</span>
+                    </span>
+                </div>
+
+                <h1 class="text-5xl font-bold text-gray-900 mb-8 leading-tight" data-i18n="hero_title">
+                    Je transforme vos projets SI en <span class="text-blue-600">succès opérationnels</span>.
+                </h1>
+                
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mb-8">
+                    <p class="text-lg text-gray-600 leading-relaxed mb-6" data-i18n="hero_desc_1">
+                        Consultant avec <strong id="dynamic-exp-text" class="text-gray-900">3 années d'expérience</strong>, diplômé d'un Mastère Spécialisé en Management des SI.
+                    </p>
+                    <p class="text-gray-600 leading-relaxed" data-i18n="hero_desc_2">
+                        Je dispose d'une double expertise technique et fonctionnelle, consolidée au sein de grands comptes (Sanofi, DGFIP). Certifié <strong>PSM I</strong> et <strong>PSPO I</strong>, j'excelle dans le pilotage de projet, la stratégie de qualification et l'articulation entre exigences métiers et solutions technologiques.
                     </p>
                 </div>
 
-                <h2 class="section-title">Expériences Professionnelles</h2>
-
-                <!-- MC2i -->
-                <div class="mb-6">
-                    <div class="job-header">
-                        <h3 class="font-bold text-lg text-slate-800 heading-font">Consultant AMOA</h3>
-                        <span class="text-[11px] font-bold text-white badge-pro px-2 py-0.5 rounded-sm">Nov. 2025 – Auj.</span>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-6 bg-white rounded-xl shadow-sm border border-gray-100 text-center">
+                        <div class="text-3xl font-bold text-blue-600 mb-1" id="dynamic-exp-badge">3 Ans</div>
+                        <div class="text-sm text-gray-500 font-medium" data-i18n="stat_exp">Expérience Pro</div>
                     </div>
-                    <div class="text-[13px] font-bold text-blue-700 mb-0.5 uppercase tracking-wide">MC2i (Client : DGFIP)</div>
-                    <p class="text-[13px] italic text-slate-500 mb-1.5 border-b border-dotted border-slate-300 pb-1">Projet SME : Mise en œuvre du nouveau régime de franchise de TVA (Alignement UE).</p>
-                    
-                    <ul class="list-none space-y-1.5 text-sm text-slate-700">
-                        <li class="relative pl-3 before:content-['▸'] before:absolute before:left-0 before:text-blue-600">
-                            <strong>Pilotage & Stratégie :</strong> Définition de la stratégie de qualification, analyse des risques et pilotage d'un POC d'automatisation des tests.
-                        </li>
-                        <li class="relative pl-3 before:content-['▸'] before:absolute before:left-0 before:text-blue-600">
-                            <strong>Conception & Recette :</strong> Élaboration de la couverture de tests (Squash TM), conception des jeux de données et exécution des campagnes.
-                        </li>
-                        <li class="relative pl-3 before:content-['▸'] before:absolute before:left-0 before:text-blue-600">
-                            <strong>Suivi & Coordination :</strong> Gestion des anomalies, priorisation des corrections et validation technique avant mise en production.
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Sanofi -->
-                <div class="mb-6">
-                    <div class="job-header">
-                        <h3 class="font-bold text-lg text-slate-800 heading-font">Chef de Projet Digital</h3>
-                        <span class="text-[11px] font-bold text-blue-600 border border-blue-200 px-2 py-0.5 rounded-sm">2024 – 2025</span>
+                    <div class="p-6 bg-white rounded-xl shadow-sm border border-gray-100 text-center">
+                        <div class="text-3xl font-bold text-blue-600 mb-1">2</div>
+                        <div class="text-sm text-gray-500 font-medium" data-i18n="stat_certs">Certifications Agiles</div>
                     </div>
-                    <div class="text-[13px] font-bold text-blue-700 mb-0.5 uppercase tracking-wide">Sanofi (International)</div>
-                    <p class="text-[13px] italic text-slate-500 mb-1.5 border-b border-dotted border-slate-300 pb-1">Programme EVF : Transformation digitale des processus industriels (IAM, IoT).</p>
-                    
-                    <ul class="list-none space-y-1.5 text-sm text-slate-700">
-                        <li class="relative pl-3 before:content-['▸'] before:absolute before:left-0 before:text-blue-600">
-                            <strong>Pilotage de Projet :</strong> Coordination du déploiement de solutions digitales (bracelets connectés, transport automatisé) en contexte international.
-                        </li>
-                        <li class="relative pl-3 before:content-['▸'] before:absolute before:left-0 before:text-blue-600">
-                            <strong>Performance & UX :</strong> Réduction de 70% des temps de signature/authentification et résolution des irritants utilisateurs.
-                        </li>
-                        <li class="relative pl-3 before:content-['▸'] before:absolute before:left-0 before:text-blue-600">
-                            <strong>Change Management :</strong> Recueil des besoins, animation d'ateliers d'appropriation et suivi des KPI d'adoption.
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Capgemini -->
-                <div class="mb-2">
-                    <div class="job-header">
-                        <h3 class="font-bold text-lg text-slate-800 heading-font">Consultant Technique & Fonctionnel</h3>
-                        <span class="text-[11px] font-bold text-blue-600 border border-blue-200 px-2 py-0.5 rounded-sm">2022 – 2024</span>
+                    <div class="p-6 bg-white rounded-xl shadow-sm border border-gray-100 text-center">
+                        <div class="text-3xl font-bold text-blue-600 mb-1">100%</div>
+                        <div class="text-sm text-gray-500 font-medium" data-i18n="stat_engagement">Engagement</div>
                     </div>
-                    <div class="text-[13px] font-bold text-blue-700 mb-0.5 uppercase tracking-wide">Capgemini (Client : ASP)</div>
-                    <p class="text-[13px] italic text-slate-500 mb-1.5 border-b border-dotted border-slate-300 pb-1">Projet PAC : Maintenance évolutive du SI de gestion des aides (50k utilisateurs).</p>
-                    
-                    <ul class="list-none space-y-1.5 text-sm text-slate-700">
-                        <li class="relative pl-3 before:content-['▸'] before:absolute before:left-0 before:text-blue-600">
-                            <strong>Analyse & Cadrage :</strong> Formalisation des User Stories, analyse des anomalies de production et traduction des besoins.
-                        </li>
-                        <li class="relative pl-3 before:content-['▸'] before:absolute before:left-0 before:text-blue-600">
-                            <strong>Développement & SQL :</strong> Évolutions applicatives (Java Spring Boot, Vue.js) et optimisation de requêtes SQL.
-                        </li>
-                        <li class="relative pl-3 before:content-['▸'] before:absolute before:left-0 before:text-blue-600">
-                            <strong>Qualité (QA) :</strong> Exécution de tests fonctionnels avec Jira XRAY pour garantir la continuité opérationnelle.
-                        </li>
-                    </ul>
-                </div>
-
-            </div>
-
-            <!-- COLONNE LATERALE (COMPETENCES) - 34% -->
-            <div class="w-[34%] bg-slate-50 p-6 pl-5 border-l border-slate-200">
-                
-                <h2 class="sidebar-title mt-0">Compétences Clés</h2>
-                
-                <div class="mb-5">
-                    <p class="text-sm font-bold text-slate-700 mb-2">Gestion de Projet</p>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="text-xs badge-pro px-2 py-0.5 rounded-sm">Pilotage</span>
-                        <span class="text-xs badge-pro px-2 py-0.5 rounded-sm">Scrum Master</span>
-                        <span class="text-xs badge-pro px-2 py-0.5 rounded-sm">Cycle en V</span>
-                        <span class="text-xs badge-pro px-2 py-0.5 rounded-sm">Cadrage</span>
-                    </div>
-                </div>
-
-                <div class="mb-5">
-                    <p class="text-sm font-bold text-slate-700 mb-1">Recette & Qualité</p>
-                    <p class="text-xs text-slate-600">Squash TM, Jira Xray, HP QC, Stratégie de qualification, Automatisation (POC)</p>
-                </div>
-
-                <div class="mb-5">
-                    <p class="text-sm font-bold text-slate-700 mb-1">Outils & SI</p>
-                    <p class="text-xs text-slate-600">Jira, Confluence, ServiceNow, Power BI, SAP S/4HANA</p>
-                </div>
-                
-                <div class="mb-5">
-                    <p class="text-sm font-bold text-slate-700 mb-1">Technique (Back/Front)</p>
-                    <p class="text-xs text-slate-600">Java (Spring Boot), SQL, HTML/CSS, JavaScript (Vue.js), Python</p>
-                </div>
-
-                <h2 class="sidebar-title">Certifications</h2>
-                <div class="space-y-3">
-                    <div class="flex items-start">
-                        <i class="fas fa-certificate text-blue-600 mt-0.5 mr-2 text-xs"></i>
-                        <div>
-                            <p class="text-sm font-bold text-slate-800">PSM I</p>
-                            <p class="text-xs text-slate-500">Professional Scrum Master</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start">
-                        <i class="fas fa-certificate text-blue-600 mt-0.5 mr-2 text-xs"></i>
-                        <div>
-                            <p class="text-sm font-bold text-slate-800">PSPO I</p>
-                            <p class="text-xs text-slate-500">Professional Product Owner</p>
-                        </div>
-                    </div>
-                </div>
-
-                <h2 class="sidebar-title">Langues</h2>
-                <div class="flex justify-between text-sm mb-1">
-                    <span class="text-slate-700">Français</span>
-                    <span class="text-slate-500">Maternel</span>
-                </div>
-                <div class="flex justify-between text-sm">
-                    <span class="text-slate-700">Anglais</span>
-                    <span class="text-slate-800 font-bold">Professionnel</span>
-                </div>
-
-                <h2 class="sidebar-title">Formation</h2>
-                <div class="mb-4">
-                    <p class="text-sm font-bold text-slate-800">Mastère Spécialisé (MS)</p>
-                    <p class="text-xs text-slate-600">Conseil & Management SI</p>
-                    <p class="text-xs text-slate-400 italic">IMT Business School (2025)</p>
-                </div>
-                <div class="mb-4">
-                     <p class="text-sm font-bold text-slate-800">Master of Science (MSc)</p>
-                     <p class="text-xs text-slate-600">Informatique et SI</p>
-                     <p class="text-xs text-slate-400 italic">EPSI (2024)</p>
                 </div>
             </div>
         </div>
-    </div>
+
+        <!-- BLOC 2: EXPÉRIENCES CLÉS -->
+        <div id="experience" class="content-section">
+            <div class="max-w-4xl mx-auto py-4">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2" data-i18n="title_exp">Expériences Professionnelles</h2>
+                <p class="text-gray-500 mb-10" data-i18n="subtitle_exp">Mon parcours en ESN et chez le client final.</p>
+                
+                <div class="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
+                    
+                    <!-- Exp 1 -->
+                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-blue-600 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                            <i class="fas fa-building text-white text-xs"></i>
+                        </div>
+                        <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-bold text-gray-900" data-i18n="exp1_role">Consultant en informatique</h3>
+                                <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded" data-i18n="exp1_date">Nov. 2025 – Auj.</span>
+                            </div>
+                            <div class="text-sm text-gray-500 font-medium mb-3" data-i18n="exp1_company">Grand Acteur Public (Paris)</div>
+                            <p class="text-sm text-gray-600 mb-4 italic" data-i18n="exp1_desc">Projet de mise en conformité réglementaire (TVA).</p>
+                            <ul class="text-sm text-gray-600 list-disc list-inside space-y-1" data-i18n="exp1_bullets">
+                                <li>Rédaction exigences & spécifications.</li>
+                                <li>Stratégie de recette & plans de tests.</li>
+                                <li>Exécution tests & suivi anomalies.</li>
+                                <li>POC Automatisation.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Exp 2 -->
+                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                            <i class="fas fa-industry text-gray-400 text-xs"></i>
+                        </div>
+                        <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-bold text-gray-900" data-i18n="exp2_role">Transformation Digitale</h3>
+                                <span class="text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded">2024 – 2025</span>
+                            </div>
+                            <div class="text-sm text-gray-500 font-medium mb-3" data-i18n="exp2_company">Industrie Pharma (Lyon)</div>
+                            <p class="text-sm text-gray-600 mb-4 italic" data-i18n="exp2_desc">Digitalisation processus industriels & logistiques.</p>
+                            <ul class="text-sm text-gray-600 list-disc list-inside space-y-1" data-i18n="exp2_bullets">
+                                <li>Pilotage déploiement (biométrie/logistique).</li>
+                                <li>Scrum Master & Product Owner.</li>
+                                <li>Coordination parties prenantes & Change.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Exp 3 -->
+                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                            <i class="fas fa-code text-gray-400 text-xs"></i>
+                        </div>
+                        <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-bold text-gray-900" data-i18n="exp3_role">Consultant Technique</h3>
+                                <span class="text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded">2022 – 2024</span>
+                            </div>
+                            <div class="text-sm text-gray-500 font-medium mb-3" data-i18n="exp3_company">ESN / Public (Nantes)</div>
+                            <p class="text-sm text-gray-600 mb-4 italic" data-i18n="exp3_desc">Maintenance SI critique (Aides PAC).</p>
+                            <ul class="text-sm text-gray-600 list-disc list-inside space-y-1" data-i18n="exp3_bullets">
+                                <li>Analyse besoins & Specs (Jira).</li>
+                                <li>Interface Métier / Dév.</li>
+                                <li>Pilotage recette fonctionnelle.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- BLOC 3: COMPÉTENCES -->
+        <div id="competences" class="content-section">
+            <div class="max-w-5xl mx-auto py-4">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2" data-i18n="title_skills">Compétences</h2>
+                <p class="text-gray-500 mb-10" data-i18n="subtitle_skills">Mon savoir-faire opérationnel.</p>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Gestion Projet -->
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                        <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600 text-xl mb-6">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-4" data-i18n="skill_gp">Gestion de Projet</h3>
+                        <div class="flex flex-wrap gap-2" data-i18n="skill_gp_items">
+                            <!-- Items updated via JS -->
+                            <span class="px-3 py-1.5 bg-gray-50 text-gray-700 rounded-lg text-sm border border-gray-100">Pilotage</span>
+                            <span class="px-3 py-1.5 bg-gray-50 text-gray-700 rounded-lg text-sm border border-gray-100">Scrum Master</span>
+                            <span class="px-3 py-1.5 bg-gray-50 text-gray-700 rounded-lg text-sm border border-gray-100">Product Owner</span>
+                            <span class="px-3 py-1.5 bg-gray-50 text-gray-700 rounded-lg text-sm border border-gray-100">Cycle en V</span>
+                            <span class="px-3 py-1.5 bg-gray-50 text-gray-700 rounded-lg text-sm border border-gray-100">Change Mgt</span>
+                        </div>
+                    </div>
+
+                    <!-- Qualité -->
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                        <div class="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center text-green-600 text-xl mb-6">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-4" data-i18n="skill_qa">Recette & Qualité</h3>
+                        <ul class="space-y-3 text-sm text-gray-600" data-i18n="skill_qa_items">
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-3"></i>Stratégie de qualification</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-3"></i>Squash TM / Jira Xray / HP QC</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-3"></i>Automatisation (POC)</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-3"></i>Suivi anomalies</li>
+                        </ul>
+                    </div>
+
+                    <!-- Technique -->
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                        <div class="w-12 h-12 bg-purple-50 rounded-lg flex items-center justify-center text-purple-600 text-xl mb-6">
+                            <i class="fas fa-laptop-code"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-4" data-i18n="skill_tech">Outils & Technique</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <span class="text-xs font-bold text-gray-400 uppercase tracking-wide" data-i18n="skill_tools">Outils</span>
+                                <p class="text-sm text-gray-700 mt-1">Jira, Confluence, ServiceNow, Power BI</p>
+                            </div>
+                            <div>
+                                <span class="text-xs font-bold text-gray-400 uppercase tracking-wide" data-i18n="skill_lang">Langages (Notions)</span>
+                                <p class="text-sm text-gray-700 mt-1">Java, SQL, HTML/CSS, Python</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BLOC 4: CERTIFICATIONS -->
+        <div id="certifications" class="content-section">
+            <div class="max-w-4xl mx-auto py-4">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2" data-i18n="title_certs">Certifications</h2>
+                <p class="text-gray-500 mb-10" data-i18n="subtitle_certs">Validations officielles de mes compétences.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-6 hover:border-blue-200 transition group">
+                        <div class="h-16 w-16 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 text-2xl group-hover:scale-110 transition">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-gray-900">PSM I</div>
+                            <div class="text-base text-gray-600 font-medium">Professional Scrum Master</div>
+                            <div class="text-sm text-gray-400 mt-1">Scrum.org</div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-6 hover:border-blue-200 transition group">
+                        <div class="h-16 w-16 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 text-2xl group-hover:scale-110 transition">
+                            <i class="fas fa-award"></i>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-gray-900">PSPO I</div>
+                            <div class="text-base text-gray-600 font-medium">Professional Product Owner</div>
+                            <div class="text-sm text-gray-400 mt-1">Scrum.org</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BLOC 5: FORMATION -->
+        <div id="formation" class="content-section">
+            <div class="max-w-4xl mx-auto py-4">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2" data-i18n="title_edu">Formation Académique</h2>
+                <p class="text-gray-500 mb-10" data-i18n="subtitle_edu">Mon parcours d'études supérieures.</p>
+
+                <div class="space-y-6">
+                    <!-- Diplome 1 -->
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900" data-i18n="edu1_title">Mastère Spécialisé (MS)</h3>
+                            <p class="text-gray-600 text-lg" data-i18n="edu1_desc">Conseil & Management des Systèmes d'Information</p>
+                            <p class="text-sm text-gray-400 mt-2">IMT Business School</p>
+                        </div>
+                        <span class="px-4 py-2 bg-gray-100 text-gray-700 font-bold rounded-lg whitespace-nowrap">2025</span>
+                    </div>
+
+                    <!-- Diplome 2 -->
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900" data-i18n="edu2_title">Master of Science (MSc)</h3>
+                            <p class="text-gray-600 text-lg" data-i18n="edu2_desc">Informatique et Systèmes d'Information</p>
+                            <p class="text-sm text-gray-400 mt-2">EPSI</p>
+                        </div>
+                        <span class="px-4 py-2 bg-gray-100 text-gray-700 font-bold rounded-lg whitespace-nowrap">2024</span>
+                    </div>
+
+                    <!-- Diplome 3 -->
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900" data-i18n="edu3_title">Diplôme d'Ingénieur des Travaux</h3>
+                            <p class="text-gray-600 text-lg" data-i18n="edu3_desc">Informatique</p>
+                            <p class="text-sm text-gray-400 mt-2">Institut Africain D'Informatique</p>
+                        </div>
+                        <span class="px-4 py-2 bg-gray-100 text-gray-700 font-bold rounded-lg whitespace-nowrap">2019</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BLOC 6: LANGUES -->
+        <div id="langues" class="content-section">
+            <div class="max-w-4xl mx-auto py-4">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2" data-i18n="title_lang">Langues</h2>
+                <p class="text-gray-500 mb-10" data-i18n="subtitle_lang">Compétences linguistiques.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <span class="fi fi-fr text-4xl rounded shadow-sm"></span>
+                            <span class="text-xl font-bold text-gray-900" data-i18n="lang_fr">Français</span>
+                        </div>
+                        <span class="px-4 py-1.5 bg-green-50 text-green-700 font-medium rounded-full text-sm" data-i18n="level_native">Maternel</span>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <span class="fi fi-gb text-4xl rounded shadow-sm"></span>
+                            <span class="text-xl font-bold text-gray-900" data-i18n="lang_en">Anglais</span>
+                        </div>
+                        <span class="px-4 py-1.5 bg-blue-50 text-blue-700 font-medium rounded-full text-sm" data-i18n="level_pro">Professionnel</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- SCRIPT DE NAVIGATION, TRADUCTION ET CALCUL -->
+    <script>
+        // Dictionnaire de traductions
+        const translations = {
+            fr: {
+                role: "Consultant AMOA &<br>Chef de Projet SI",
+                menu_about: "À propos de moi",
+                menu_exp: "Expériences Clés",
+                menu_skills: "Compétences",
+                menu_certs: "Certifications",
+                menu_edu: "Formation",
+                menu_lang: "Langues",
+                contact_btn: "Me contacter",
+                welcome_badge: "Bienvenue",
+                location: "Paris, France",
+                hero_title: "Je transforme vos projets SI en <span class='text-blue-600'>succès opérationnels</span>.",
+                hero_desc_1: "Consultant avec <strong id='dynamic-exp-text' class='text-gray-900'>3 années d'expérience</strong>, diplômé d'un Mastère Spécialisé en Management des SI.",
+                hero_desc_2: "Je dispose d'une double expertise technique et fonctionnelle, consolidée au sein de grands comptes (Sanofi, DGFIP). Certifié <strong>PSM I</strong> et <strong>PSPO I</strong>, j'excelle dans le pilotage de projet, la stratégie de qualification et l'articulation entre exigences métiers et solutions technologiques.",
+                stat_exp: "Expérience Pro",
+                stat_certs: "Certifications Agiles",
+                stat_engagement: "Engagement",
+                title_exp: "Expériences Professionnelles",
+                subtitle_exp: "Mon parcours en ESN et chez le client final.",
+                exp1_role: "Consultant en informatique",
+                exp1_date: "Nov. 2025 – Auj.",
+                exp1_company: "Grand Acteur Public (Paris)",
+                exp1_desc: "Projet de mise en conformité réglementaire (TVA).",
+                exp1_bullets: "<li>Rédaction exigences & spécifications.</li><li>Stratégie de recette & plans de tests.</li><li>Exécution tests & suivi anomalies.</li><li>POC Automatisation.</li>",
+                exp2_role: "Transformation Digitale",
+                exp2_company: "Industrie Pharma (Lyon)",
+                exp2_desc: "Digitalisation processus industriels & logistiques.",
+                exp2_bullets: "<li>Pilotage déploiement (biométrie/logistique).</li><li>Scrum Master & Product Owner.</li><li>Coordination parties prenantes & Change.</li>",
+                exp3_role: "Consultant Technique",
+                exp3_company: "ESN / Public (Nantes)",
+                exp3_desc: "Maintenance SI critique (Aides PAC).",
+                exp3_bullets: "<li>Analyse besoins & Specs (Jira).</li><li>Interface Métier / Dév.</li><li>Pilotage recette fonctionnelle.</li>",
+                title_skills: "Compétences",
+                subtitle_skills: "Mon savoir-faire opérationnel.",
+                skill_gp: "Gestion de Projet",
+                skill_gp_items: '<span class="px-3 py-1.5 bg-gray-50 text-gray-700 rounded-lg text-sm border border-gray-100">Pilotage</span><span class="px-3 py-1.5 bg-gray-50 text-gray-700 rounded-lg text-sm border border-gray-100">Scrum Master</span><span class="px-3 py-1.5 bg-gray-50 text-gray-700 rounded-lg text-sm border border-gray-100">Product Owner</span><span class="px-3 py-1.5 bg-gray-50 text-gray-700 rounded-lg text-sm border border-gray-100">Cycle en V</span><span class="px-3 py-1.5 bg-gray-50 text-gray-700 rounded-lg text-sm border border-gray-100">Change Mgt</span>',
+                skill_qa: "Recette & Qualité",
+                skill_qa_items: '<li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-3"></i>Stratégie de qualification</li><li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-3"></i>Squash TM / Jira Xray / HP QC</li><li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-3"></i>Automatisation (POC)</li><li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-3"></i>Suivi anomalies</li>',
+                skill_tech: "Outils & Technique",
+                skill_tools: "Outils",
+                skill_lang: "Langages (Notions)",
+                title_certs: "Certifications",
+                subtitle_certs: "Validations officielles de mes compétences.",
+                title_edu: "Formation Académique",
+                subtitle_edu: "Mon parcours d'études supérieures.",
+                edu1_title: "Mastère Spécialisé (MS)",
+                edu1_desc: "Conseil & Management des Systèmes d'Information",
+                edu2_title: "Master of Science (MSc)",
+                edu2_desc: "Informatique et Systèmes d'Information",
+                edu3_title: "Diplôme d'Ingénieur des Travaux",
+                edu3_desc: "Informatique",
+                title_lang: "Langues",
+                subtitle_lang: "Compétences linguistiques.",
+                lang_fr: "Français",
+                level_native: "Maternel",
+                lang_en: "Anglais",
+                level_pro: "Professionnel",
+                year_unit: "Ans",
+                year_text: "années d'expérience"
+            },
+            en: {
+                role: "IT Business Analyst &<br>IT Project Manager",
+                menu_about: "About Me",
+                menu_exp: "Key Experiences",
+                menu_skills: "Skills",
+                menu_certs: "Certifications",
+                menu_edu: "Education",
+                menu_lang: "Languages",
+                contact_btn: "Contact Me",
+                welcome_badge: "Welcome",
+                location: "Paris, France",
+                hero_title: "Transforming IT projects into <span class='text-blue-600'>operational success</span>.",
+                hero_desc_1: "Consultant with <strong id='dynamic-exp-text' class='text-gray-900'>3 years of experience</strong>, holding a Specialized Master in IS Management.",
+                hero_desc_2: "I possess dual technical and functional expertise, consolidated within major accounts (Sanofi, DGFIP). Certified <strong>PSM I</strong> and <strong>PSPO I</strong>, I excel in project management, testing strategy, and bridging the gap between business requirements and technological solutions.",
+                stat_exp: "Pro Experience",
+                stat_certs: "Agile Certs",
+                stat_engagement: "Commitment",
+                title_exp: "Professional Experience",
+                subtitle_exp: "My career path in Consulting and Client-side.",
+                exp1_role: "IT Consultant",
+                exp1_date: "Nov 2025 – Present",
+                exp1_company: "Public Sector (Paris)",
+                exp1_desc: "Regulatory compliance project (VAT).",
+                exp1_bullets: "<li>Requirements gathering & specifications.</li><li>Test strategy & test plans.</li><li>Test execution & defect tracking.</li><li>Automation POC.</li>",
+                exp2_role: "Digital Transformation",
+                exp2_company: "Pharma Industry (Lyon)",
+                exp2_desc: "Digitalization of industrial & logistics processes.",
+                exp2_bullets: "<li>Deployment management (biometrics/logistics).</li><li>Scrum Master & Product Owner.</li><li>Stakeholder management & Change.</li>",
+                exp3_role: "Technical Consultant",
+                exp3_company: "IT Services / Public (Nantes)",
+                exp3_desc: "Critical IS maintenance (PAC Aid).",
+                exp3_bullets: "<li>Requirements analysis & Specs (Jira).</li><li>Business/Dev Interface.</li><li>Functional testing management.</li>",
+                title_skills: "Skills",
+                subtitle_skills: "My operational know-how.",
+                skill_gp: "Project Management",
+                skill_gp_items: '<span class="px-3 py-1.5 bg-gray-50 text-gray-700 rounded-lg text-sm border border-gray-100">Steering</span><span class="px-3 py-1.5 bg-gray-50 text-gray-700 rounded-lg text-sm border border-gray-100">Scrum Master</span><span class="px-3 py-1.5 bg-gray-50 text-gray-700 rounded-lg text-sm border border-gray-100">Product Owner</span><span class="px-3 py-1.5 bg-gray-50 text-gray-700 rounded-lg text-sm border border-gray-100">V-Model</span><span class="px-3 py-1.5 bg-gray-50 text-gray-700 rounded-lg text-sm border border-gray-100">Change Mgt</span>',
+                skill_qa: "QA & Testing",
+                skill_qa_items: '<li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-3"></i>Test Strategy</li><li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-3"></i>Squash TM / Jira Xray / HP QC</li><li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-3"></i>Automation (POC)</li><li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-3"></i>Defect Tracking</li>',
+                skill_tech: "Tools & Tech",
+                skill_tools: "Tools",
+                skill_lang: "Languages (Basics)",
+                title_certs: "Certifications",
+                subtitle_certs: "Official validation of my skills.",
+                title_edu: "Education",
+                subtitle_edu: "My academic background.",
+                edu1_title: "Specialized Master (MS)",
+                edu1_desc: "Consulting & Management of Information Systems",
+                edu2_title: "Master of Science (MSc)",
+                edu2_desc: "Computer Science & Information Systems",
+                edu3_title: "Works Engineer Degree",
+                edu3_desc: "Computer Science",
+                title_lang: "Languages",
+                subtitle_lang: "Linguistic skills.",
+                lang_fr: "French",
+                level_native: "Native",
+                lang_en: "English",
+                level_pro: "Professional",
+                year_unit: "Yrs",
+                year_text: "years of experience"
+            }
+        };
+
+        let currentLang = 'fr';
+
+        // Changer la langue
+        function setLanguage(lang, closeModal = false) {
+            currentLang = lang;
+            
+            // Masquer le modal si demandé
+            if (closeModal) {
+                document.getElementById('welcome-modal').classList.add('hidden-modal');
+            }
+
+            // Mettre à jour tous les textes
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    element.innerHTML = translations[lang][key];
+                }
+            });
+
+            // Mettre à jour l'état visuel du switcher
+            document.getElementById('lang-btn-fr').className = lang === 'fr' 
+                ? "flex-1 py-1 px-2 rounded-md text-xs font-bold transition-colors flex items-center justify-center gap-1.5 bg-gray-100 text-blue-700" 
+                : "flex-1 py-1 px-2 rounded-md text-xs font-bold text-gray-500 hover:bg-gray-50 transition-colors flex items-center justify-center gap-1.5";
+            
+            document.getElementById('lang-btn-en').className = lang === 'en' 
+                ? "flex-1 py-1 px-2 rounded-md text-xs font-bold transition-colors flex items-center justify-center gap-1.5 bg-gray-100 text-blue-700" 
+                : "flex-1 py-1 px-2 rounded-md text-xs font-bold text-gray-500 hover:bg-gray-50 transition-colors flex items-center justify-center gap-1.5";
+
+            // Recalculer l'année avec le bon texte
+            updateExperience();
+        }
+
+        // Navigation SPA
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+            const targetSection = document.getElementById(sectionId);
+            const targetBtn = document.getElementById('btn-' + sectionId);
+            
+            if (targetSection) targetSection.classList.add('active');
+            if (targetBtn) targetBtn.classList.add('active');
+        }
+
+        // Calcul dynamique des années d'expérience (Depuis Sept 2022)
+        function updateExperience() {
+            const startYear = 2022;
+            const startMonth = 8; // Septembre
+            const now = new Date();
+            
+            let years = now.getFullYear() - startYear;
+            if (now.getMonth() < startMonth) {
+                years--;
+            }
+
+            const expText = document.getElementById('dynamic-exp-text');
+            const expBadge = document.getElementById('dynamic-exp-badge');
+            
+            if (expText) expText.innerHTML = `${years} ${translations[currentLang].year_text}`;
+            if (expBadge) expBadge.innerText = `${years} ${translations[currentLang].year_unit}`;
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            // Lancer le calcul par défaut (en FR, modal visible)
+            updateExperience();
+        });
+    </script>
+
 </body>
 </html>
